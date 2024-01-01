@@ -119,6 +119,7 @@ We welcome contributions from the community. If you want to contribute to Twig S
 3. Make your changes and ensure all tests pass.
 4. Submit a pull request with a clear description of your changes.
 
+Make sure to follow the [code of conduct](CODE_OF_CONDUCT.md) when interacting with this community.
 ## License
 
 Twig Storybook is open-source software licensed under the [GPL-2 License](LICENSE).
