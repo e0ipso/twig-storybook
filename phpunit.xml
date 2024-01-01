@@ -8,7 +8,7 @@
       <clover outputFile="build/logs/clover.xml"/>
     </report>
   </coverage>
-  <testsuite name="SchemaForms">
+  <testsuite name="TwigStorybook">
     <directory suffix="Test.php">tests</directory>
   </testsuite>
   <logging/>

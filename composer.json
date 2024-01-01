@@ -13,12 +13,10 @@
         "php": ">=8.1",
         "ext-dom": "*",
         "ext-mbstring": "*",
-        "symfony/dom-crawler": ">=6"
+        "symfony/dom-crawler": ">=6",
+        "twig/twig": "^3"
     },
     "require-dev": {
-        "drupal/coder": "^8.3",
-        "drupal/core-dev": "^10.2",
-        "drupal/core-recommended": "^10.2",
         "enlightn/security-checker": "^1.11",
         "ergebnis/composer-normalize": "^2.41",
         "nikic/php-parser": "^4.18",
@@ -38,8 +36,8 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true,
-            "phpro/grumphp-shim": true,
             "php-http/discovery": true,
+            "phpro/grumphp-shim": true,
             "phpstan/extension-installer": true
         }
     },

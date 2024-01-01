@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\twig_storybook\Twig;
+namespace TwigStorybook\Twig;
 
-use Drupal\twig_storybook\Twig\tag\StoryNode;
+use TwigStorybook\Twig\tag\StoryNode;
 use Twig\Environment;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
@@ -10,40 +10,44 @@ use Twig\NodeVisitor\NodeVisitorInterface;
 /**
  * Node visitor for the components.
  */
-final class StoryNodeVisitor implements NodeVisitorInterface {
+final class StoryNodeVisitor implements NodeVisitorInterface
+{
 
-  /**
-   * The internal counter.
-   *
-   * @var int
-   */
-  private int $nestingDepth = 0;
+    /**
+     * The internal counter.
+     *
+     * @var int
+     */
+    private int $nestingDepth = 0;
 
-  /**
-   * {@inheritdoc}
-   */
-  public function enterNode(Node $node, Environment $env): Node {
-    if ($node instanceof StoryNode) {
-      $node->setAttribute('nesting_depth', $this->nestingDepth++);
+    /**
+     * {@inheritdoc}
+     */
+    public function enterNode(Node $node, Environment $env): Node
+    {
+        if ($node instanceof StoryNode) {
+            $node->setAttribute('nesting_depth', $this->nestingDepth++);
+        }
+        return $node;
     }
-    return $node;
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function leaveNode(Node $node, Environment $env): ?Node {
-    if ($node instanceof StoryNode) {
-      $node->setAttribute('nesting_depth', $this->nestingDepth--);
+    /**
+     * {@inheritdoc}
+     */
+    public function leaveNode(Node $node, Environment $env): ?Node
+    {
+        if ($node instanceof StoryNode) {
+            $node->setAttribute('nesting_depth', $this->nestingDepth--);
+        }
+        return $node;
     }
-    return $node;
-  }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getPriority(): int {
-    return 0;
-  }
+    /**
+     * {@inheritdoc}
+     */
+    public function getPriority(): int
+    {
+        return 0;
+    }
 
 }
