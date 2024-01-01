@@ -82,5 +82,4 @@ final class StoryNode extends Node implements NodeOutputInterface
             ->outdent()
             ->write('}');
     }
-
 }

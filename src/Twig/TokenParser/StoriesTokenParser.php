@@ -84,5 +84,4 @@ final class StoriesTokenParser extends AbstractTokenParser
 
         return [$variables];
     }
-
 }

@@ -49,5 +49,4 @@ final class StoryNodeVisitor implements NodeVisitorInterface
     {
         return 0;
     }
-
 }

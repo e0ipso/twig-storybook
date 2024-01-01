@@ -7,12 +7,12 @@ use Twig\Compiler;
 trait NodeTrait
 {
 
-    /**
-     * Gets the path relative to the app root.
-     *
-     * @return string
-     *   The relative path.
-     */
+  /**
+   * Gets the path relative to the app root.
+   *
+   * @return string
+   *   The relative path.
+   */
     private function getRelativeTemplatePath(string $root): string
     {
         $path = $this->getSourceContext()?->getPath() ?? '';
@@ -25,18 +25,17 @@ trait NodeTrait
 
     private function compileMergeContext(Compiler $compiler)
     {
-        // Merge parameters.
+      // Merge parameters.
         $compiler
-            ->raw('$context = twig_array_merge($context, ')
-            ->subcompile($this->getNode('variables'))
-            ->write('[\'parameters\'][\'server\'][\'params\'] ?? []);')
-            ->write(PHP_EOL);
-        // Merge args.
+        ->raw('$context = twig_array_merge($context, ')
+        ->subcompile($this->getNode('variables'))
+        ->write('[\'parameters\'][\'server\'][\'params\'] ?? []);')
+        ->write(PHP_EOL);
+      // Merge args.
         $compiler
-            ->raw('$context = twig_array_merge($context, ')
-            ->subcompile($this->getNode('variables'))
-            ->write('[\'args\'] ?? []);')
-            ->write(PHP_EOL);
+        ->raw('$context = twig_array_merge($context, ')
+        ->subcompile($this->getNode('variables'))
+        ->write('[\'args\'] ?? []);')
+        ->write(PHP_EOL);
     }
-
 }

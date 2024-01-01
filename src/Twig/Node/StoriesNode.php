@@ -12,7 +12,6 @@ final class StoriesNode extends Node
 
     use NodeTrait;
 
-    // we don't inject the module to avoid node visitors to traverse it twice (as it will be already visited in the main module)
     public function __construct(
         string $title,
         Node $body,
@@ -80,5 +79,4 @@ final class StoriesNode extends Node
             ->outdent()
             ->write('}');
     }
-
 }

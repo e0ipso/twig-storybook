@@ -22,6 +22,8 @@ grumphp:
         - '/\d+\.x/'
     phpunit: ~
     phpcs:
+      standard:
+        - psr2
       tab_width: 2
       ignore_patterns: ['.github', '.gitlab', 'bower_components', 'node_modules', 'vendor', '/tests/.*']
     phpmnd:

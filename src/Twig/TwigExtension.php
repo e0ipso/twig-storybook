@@ -48,5 +48,4 @@ final class TwigExtension extends AbstractExtension
     {
         return [new StoryNodeVisitor()];
     }
-
 }

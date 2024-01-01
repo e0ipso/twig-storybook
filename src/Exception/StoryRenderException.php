@@ -5,4 +5,6 @@ namespace TwigStorybook\Exception;
 /**
  * Component syntax exception.
  */
-class StoryRenderException extends \Exception {}
+class StoryRenderException extends \Exception
+{
+}

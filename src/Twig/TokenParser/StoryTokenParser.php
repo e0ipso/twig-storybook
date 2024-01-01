@@ -23,10 +23,14 @@ class StoryTokenParser extends AbstractTokenParser
         if ($this->parser->hasBlock($name)) {
             throw new SyntaxError(
                 sprintf(
-                    "The block '%s' has already been defined line %d.", $name, $this->parser->getBlock($name)
+                    "The block '%s' has already been defined line %d.",
+                    $name,
+                    $this->parser->getBlock($name)
                         ->getTemplateLine()
-                ), $stream->getCurrent()
-                    ->getLine(), $stream->getSourceContext()
+                ),
+                $stream->getCurrent()
+                    ->getLine(),
+                $stream->getSourceContext()
             );
         }
         [$variables] = $this->parseArguments();
@@ -60,5 +64,4 @@ class StoryTokenParser extends AbstractTokenParser
 
         return [$variables];
     }
-
 }
