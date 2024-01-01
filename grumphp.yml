@@ -1,0 +1,53 @@
+grumphp:
+  additional_info: "\nVisit https://github.com/e0ipso/schema-forms-php#readme for documentation!\n"
+  hooks_preset: local
+  stop_on_failure: false
+  ignore_unstaged_changes: false
+  hide_circumvention_tip: false
+  process_timeout: 60
+  tasks:
+    git_commit_message:
+      enforce_capitalized_subject: false
+      type_scope_conventions:
+        - types: ['build', 'ci', 'chore', 'docs', 'feat', 'fix', 'perf', 'refactor', 'revert', 'style', 'test']
+        - scopes: ['schema', 'form', 'drupal', 'api']
+      max_subject_width: 50
+      enforce_no_subject_punctuations: true
+      enforce_no_subject_trailing_period: true
+    git_branch_name:
+      whitelist:
+        - '/(build|ci|chore|docs|feat|fix|perf|refactor|revert|style|test)\/[a-z0-9-]+/'
+        - master
+        - main
+    phpunit: ~
+    phpcs:
+      standard:
+        - vendor/drupal/coder/coder_sniffer/Drupal
+        - vendor/drupal/coder/coder_sniffer/DrupalPractice
+      tab_width: 2
+      ignore_patterns: ['.github', '.gitlab', 'bower_components', 'node_modules', 'vendor', '/tests/.*']
+      triggered_by: ['php', 'module', 'inc', 'install', 'test', 'profile', 'theme']
+    phpmnd:
+      hint: true
+      triggered_by: ['php', 'module']
+    securitychecker_enlightn:
+      lockfile: ./composer.lock
+      run_always: false
+    phplint:
+      exclude: []
+      jobs: ~
+      short_open_tag: false
+      ignore_patterns: []
+      triggered_by: ['php', 'module', 'inc', 'install', 'profile', 'theme']
+    yamllint: ~
+    composer: ~
+    composer_normalize: ~
+    jsonlint: ~
+    phpparser:
+      visitors:
+        no_exit_statements: ~
+        never_use_else: ~
+        forbidden_function_calls:
+          blacklist: [var_dump, kint]
+      metadata:
+        priority: 100000

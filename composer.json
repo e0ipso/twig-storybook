@@ -1,0 +1,49 @@
+{
+    "name": "e0ipso/twig-storybook",
+    "description": "Creates form definitions from JSON Schema property definitions and display configuration.",
+    "license": "GPL-2.0-or-later",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Mateu Aguiló Bosch",
+            "email": "mateu@mateuaguilo.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "ext-dom": "*",
+        "ext-mbstring": "*",
+        "symfony/dom-crawler": ">=6"
+    },
+    "require-dev": {
+        "drupal/coder": "^8.3",
+        "drupal/core-dev": "^10.2",
+        "drupal/core-recommended": "^10.2",
+        "enlightn/security-checker": "^1.11",
+        "ergebnis/composer-normalize": "^2.41",
+        "nikic/php-parser": "^4.18",
+        "php-parallel-lint/php-parallel-lint": "^1.3",
+        "phpro/grumphp-shim": "^2.4",
+        "phpunit/phpunit": "^9.6",
+        "povils/phpmnd": "^3.3",
+        "squizlabs/php_codesniffer": "^3.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "TwigStorybook\\": "src",
+            "TwigStorybook\\Tests\\": "tests/src"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "phpro/grumphp-shim": true,
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "scripts": {
+        "test": "php vendor/bin/grumphp.phar run"
+    }
+}
