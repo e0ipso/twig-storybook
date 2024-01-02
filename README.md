@@ -10,7 +10,6 @@ Twig Storybook is a Composer package that enhances the Twig templating language 
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Example](#example)
 - [Contributing](#contributing)
 - [License](#license)
 
