@@ -3,3 +3,5 @@
 /.phpunit.result.cache
 .*.swp
 /.idea
+/node_modules
+/package-lock.json
