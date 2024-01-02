@@ -9,6 +9,5 @@
     "@semantic-release/github": "^8.0.6",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "conventional-changelog-conventionalcommits": "^5.0.0"
-  },
-  "main": "index.js"
+  }
 }
