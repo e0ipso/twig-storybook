@@ -1,7 +1,7 @@
 /**
  * @type {import('semantic-release').GlobalConfig}
  */
-const config = {
+module.exports = {
   branches: [{name: 'main'}, {name: 'next'}],
   plugins: [
     ['@semantic-release/commit-analyzer', {'preset': 'conventionalcommits'}],
@@ -10,5 +10,3 @@ const config = {
     '@semantic-release/git',
   ]
 };
-
-export default config;
