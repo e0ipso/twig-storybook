@@ -1,6 +1,6 @@
 {
     "name": "e0ipso/twig-storybook",
-    "description": "Creates form definitions from JSON Schema property definitions and display configuration.",
+    "description": "Extends Twig with new \"stories\" and \"story\" tags for easily writing Storybook stories using Twig templates.",
     "license": "GPL-2.0-or-later",
     "type": "library",
     "authors": [
