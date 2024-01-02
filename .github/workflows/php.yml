@@ -17,6 +17,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup PHP
+        id: setup-php
+        uses: shivammathur/setup-php@v2
+
+      - name: Print PHP version
+        run: echo ${{ steps.setup-php.outputs.php-version }}
+
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
