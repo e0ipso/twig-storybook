@@ -1,6 +1,6 @@
 {
   "branches": [
-    "master"
+    "1.x"
   ],
   "plugins": [
     [
