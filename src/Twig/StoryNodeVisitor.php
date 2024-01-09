@@ -2,10 +2,12 @@
 
 namespace TwigStorybook\Twig;
 
-use TwigStorybook\Twig\tag\StoryNode;
 use Twig\Environment;
+use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\NodeVisitor\NodeVisitorInterface;
+use TwigStorybook\Twig\Node\StoriesNode;
+use TwigStorybook\Twig\Node\StoryNode;
 
 /**
  * Node visitor for the components.
@@ -18,15 +20,17 @@ final class StoryNodeVisitor implements NodeVisitorInterface
      *
      * @var int
      */
-    private int $nestingDepth = 0;
+    private ?ModuleNode $module = null;
 
     /**
      * {@inheritdoc}
      */
     public function enterNode(Node $node, Environment $env): Node
     {
-        if ($node instanceof StoryNode) {
-            $node->setAttribute('nesting_depth', $this->nestingDepth++);
+        if ($node instanceof ModuleNode && str_ends_with($node->getTemplateName(), '.stories.twig')) {
+          // Here we can set nodes to the different sections to alter what the
+          // generated Template class looks like.
+            $this->module = $node;
         }
         return $node;
     }
@@ -36,8 +40,8 @@ final class StoryNodeVisitor implements NodeVisitorInterface
      */
     public function leaveNode(Node $node, Environment $env): ?Node
     {
-        if ($node instanceof StoryNode) {
-            $node->setAttribute('nesting_depth', $this->nestingDepth--);
+        if ($node instanceof StoriesNode) {
+            $this->module = null;
         }
         return $node;
     }

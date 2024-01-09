@@ -27,16 +27,13 @@ final class StoriesTokenParser extends AbstractTokenParser
 
         [$variables] = $this->parseArguments();
 
-        $child_template = $this->parser->parse($stream, [$this, 'decideBlockEnd'], true);
-        $child_template->setIndex(mt_rand());
+        $child_template = $this->parser->subparse([$this, 'decideBlockEnd'], true);
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return new StoriesNode(
             $parent instanceof ConstantExpression ? $parent->getAttribute('value') : '',
-            $child_template->getNode('body'),
-            $child_template->getTemplateName(),
-            $child_template->getAttribute('index'),
+            $child_template,
             $variables,
             $token->getLine(),
             $this->getTag(),

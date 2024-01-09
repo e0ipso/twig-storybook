@@ -24,7 +24,7 @@ final class StoryNode extends Node implements NodeOutputInterface
         string $tag,
         private readonly string $root
     ) {
-        parent::__construct(['body' => $body, 'variables' => $variables], ['name' => $name], $lineno, $tag);
+        parent::__construct(['variables' => $variables], ['name' => $name, 'body' => $body], $lineno, $tag);
     }
 
     public function compile(Compiler $compiler): void
@@ -39,9 +39,10 @@ final class StoryNode extends Node implements NodeOutputInterface
             ->string($this->getAttribute('name'))
             ->write(') {')
             ->indent();
-        $this->compileMergeContext($compiler);
-        $this->getNode('body')->compile($compiler);
-        $compiler
+        $this->compileMergeContext($compiler)
+            ->subcompile($this->getAttribute('body'))
+            ->write(';')
+            ->write(PHP_EOL)
             ->outdent()
             ->write('}');
     }
@@ -51,35 +52,35 @@ final class StoryNode extends Node implements NodeOutputInterface
      */
     public function collectStoryMetadata(Compiler $compiler): void
     {
+        $story_id = $this->getAttribute('name');
+      // Collect all the stories for the given path, as we process them.
+        $path = $this->getRelativeTemplatePath($this->root);
         $compiler
             ->addDebugInfo($this)
             ->write('if (($context[\'_story\'] ?? NULL) === FALSE) {')
-            ->indent();
-        $story_id = $this->getAttribute('name');
-        // $_story_meta = ['foo' => 'bar'];
-        $compiler->write('$_story_meta = ');
+            ->indent()
+            // $_story_meta = ['foo' => 'bar'];
+            ->write('$_story_meta = ');
         $this->hasNode('variables')
         ? $compiler->subcompile($this->getNode('variables'))
         : $compiler->raw('[]');
-        $compiler->write(';')->raw(PHP_EOL);
-        // Get the extension.
-        $compiler->raw('$extension = $this->extensions[')
-            ->string(TwigExtension::class)
-            ->write('];')
-            ->raw(PHP_EOL);
-
-        // Collect all the stories for the given path, as we process them.
-        $path = $this->getRelativeTemplatePath($this->root);
-        $compiler->raw('$extension->storyCollector->collect(')
-            ->string($path)
-            ->raw(', ')
-            ->string($story_id)
-            ->raw(', ')
-            ->write('$_story_meta')
-            ->raw(');')
-            ->raw(PHP_EOL);
         $compiler
-            ->outdent()
-            ->write('}');
+          ->write(';')
+          ->write(PHP_EOL)
+          // Get the extension.
+          ->raw('$extension = $this->extensions[')
+          ->string(TwigExtension::class)
+          ->write('];')
+          ->write(PHP_EOL)
+          ->raw('$extension->storyCollector->collect(')
+          ->string($path)
+          ->raw(', ')
+          ->string($story_id)
+          ->raw(', ')
+          ->write('$_story_meta')
+          ->raw(');')
+          ->raw(PHP_EOL)
+          ->outdent()
+          ->write('}');
     }
 }

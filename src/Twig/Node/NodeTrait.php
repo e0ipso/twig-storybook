@@ -23,19 +23,25 @@ trait NodeTrait
         return ltrim(substr($path, $pos + strlen($root)), '/');
     }
 
-    private function compileMergeContext(Compiler $compiler)
+    private function compileMergeContext(Compiler $compiler): Compiler
     {
-      // Merge parameters.
         $compiler
-        ->raw('$context = twig_array_merge($context, ')
-        ->subcompile($this->getNode('variables'))
+        // Merge parameters.
+        ->raw('$context = twig_array_merge($context, ');
+        $this->hasNode('variables')
+        ? $compiler->subcompile($this->getNode('variables'))
+        : $compiler->raw('[]');
+        $compiler
         ->write('[\'parameters\'][\'server\'][\'params\'] ?? []);')
-        ->write(PHP_EOL);
-      // Merge args.
+        ->write(PHP_EOL)
+        // Merge args.
+        ->raw('$context = twig_array_merge($context, ');
+        $this->hasNode('variables')
+        ? $compiler->subcompile($this->getNode('variables'))
+        : $compiler->raw('[]');
         $compiler
-        ->raw('$context = twig_array_merge($context, ')
-        ->subcompile($this->getNode('variables'))
         ->write('[\'args\'] ?? []);')
         ->write(PHP_EOL);
+        return $compiler;
     }
 }

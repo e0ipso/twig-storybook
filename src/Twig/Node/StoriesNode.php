@@ -15,24 +15,16 @@ final class StoriesNode extends Node
     public function __construct(
         string $title,
         Node $body,
-        string $parent_template,
-        int $index,
         ?AbstractExpression $variables,
         int $lineno,
         string $tag,
         private readonly string $root,
     ) {
-        $nodes = ['body' => $body];
-        if ($variables !== null) {
-            $nodes['variables'] = $variables;
-        }
-        parent::__construct($nodes, [], $lineno, $tag);
-
-        $this->setAttribute('index', $index);
+        parent::__construct(['body' => $body], [], $lineno, $tag);
 
         // Set attributes for later.
+        $this->setAttribute('variables', $variables);
         $this->setAttribute('title', $title);
-        $this->setAttribute('parent_template', $parent_template);
     }
 
     public function compile(Compiler $compiler): void
@@ -41,8 +33,8 @@ final class StoriesNode extends Node
         $compiler->addDebugInfo($this);
         // If the template adds args or parameters at a stories level, then they
         // should be available in the individual story scope.
-        $this->compileMergeContext($compiler);
-        $this->getNode('body')->compile($compiler);
+        $this->compileMergeContext($compiler)
+           ->subcompile($this->getNode('body'));
     }
 
     /**
@@ -57,8 +49,8 @@ final class StoriesNode extends Node
         $stories_id = $this->getAttribute('title');
         // $_stories_meta = ['foo' => 'bar'];
         $compiler->write('$_stories_meta = ');
-        $this->hasNode('variables')
-        ? $compiler->subcompile($this->getNode('variables'))
+        $this->hasAttribute('variables')
+        ? $compiler->subcompile($this->getAttribute('variables'))
         : $compiler->raw('[]');
         $compiler->write(';')->raw(PHP_EOL);
         // Get the extension.

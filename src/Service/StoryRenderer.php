@@ -36,13 +36,15 @@ final class StoryRenderer
   /**
    * Renders the Twig markup of a component.
    *
-   * @param string $name
-   *   The component to render.
+   * @param string $story_id
+   * @param array $story_meta
+   * @param string $story_template
    * @param array $context
    *   The context of the component.
    *
    * @return string
    *   The rendered markup.
+   * @throws \TwigStorybook\Exception\StoryRenderException
    */
     public function renderStory(string $story_id, array $story_meta, string $story_template, array $context): string
     {
@@ -82,6 +84,7 @@ final class StoryRenderer
             '/'
         );
         $wrapper_data = $this->storyCollector->getWrapperData($path);
+        $wrapper_data['parameters']['server']['url'] = $url;
         $stories = array_map(
             fn(Story $story) => $this->massageStory($story, $path, $url),
             $this->storyCollector->getAllStories($path),
@@ -97,7 +100,7 @@ final class StoryRenderer
    * @throws \TwigStorybook\Exception\StorySyntaxException
    * @throws \JsonException
    */
-    private function massageStory(Story $story, string $stories_path, string $url): Story
+    private function massageStory(Story $story, string $stories_path, string $url): array
     {
         $meta = $story->meta;
         if ($meta['parameters']['server']['id'] ?? null) {
@@ -107,7 +110,6 @@ final class StoryRenderer
         }
       // This ID will be used by Storybook to call the server. Something like:
       // "https://example.com/$id"
-        $meta['parameters']['server']['url'] = $url;
         $meta['parameters']['server']['id'] = base64_encode(
             json_encode(
                 [
@@ -117,11 +119,7 @@ final class StoryRenderer
                 JSON_THROW_ON_ERROR
             )
         );
-        return new Story(
-            $story->path,
-            $story->id,
-            $meta,
-        );
+        return ['id' => $story->id, 'path' => $story->path, ...$meta];
     }
 
     private function validateStory(array $story)
