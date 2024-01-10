@@ -149,7 +149,7 @@ final class StoryRenderer
      * @throws \TwigStorybook\Exception\StorySyntaxException
      * @throws \JsonException
      */
-    private function massageStory(Story $story, string $stories_path, string $url): array
+    private function massageStory(Story $story, string $stories_path): array
     {
         $meta = $story->meta;
         if ($meta['parameters']['server']['id'] ?? null) {
