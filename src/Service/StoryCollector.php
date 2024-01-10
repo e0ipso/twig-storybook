@@ -25,8 +25,10 @@ final class StoryCollector
         return array_values($this->storage[$path]['stories'] ?? []);
     }
 
-    public function setWrapperData(string $path, array $meta = []): void
+    public function setWrapperData(string $stories_id, string $path, array $meta = []): void
     {
+        $title = $meta['title'] ?? $stories_id;
+        $meta['title'] = $title;
         $this->storage[$path]['wrapper'] = $meta;
     }
 

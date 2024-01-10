@@ -18,7 +18,7 @@ class StoryTokenParser extends AbstractTokenParser
     {
         $lineno = $token->getLine();
         $stream = $this->parser->getStream();
-        $name = $stream->expect(Token::STRING_TYPE)->getValue();
+        $name = $stream->expect(Token::NAME_TYPE)->getValue();
         [$variables] = $this->parseArguments();
 
         $body = $this->parser->subparse([$this, 'decideBlockEnd'], true);

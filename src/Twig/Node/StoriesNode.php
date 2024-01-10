@@ -13,7 +13,7 @@ final class StoriesNode extends Node
     use NodeTrait;
 
     public function __construct(
-        string $title,
+        string $id,
         Node $body,
         ?AbstractExpression $variables,
         int $lineno,
@@ -24,7 +24,7 @@ final class StoriesNode extends Node
 
         // Set attributes for later.
         $this->setAttribute('variables', $variables);
-        $this->setAttribute('title', $title);
+        $this->setAttribute('id', $id);
     }
 
     public function compile(Compiler $compiler): void
@@ -46,7 +46,7 @@ final class StoriesNode extends Node
             ->addDebugInfo($this)
             ->write('if ($context[\'_story\'] === FALSE) {')
             ->indent();
-        $stories_id = $this->getAttribute('title');
+        $stories_id = $this->getAttribute('id');
         // $_stories_meta = ['foo' => 'bar'];
         $compiler->write('$_stories_meta = ');
         $this->hasAttribute('variables')
@@ -62,6 +62,8 @@ final class StoriesNode extends Node
         // Collect all the stories for the given path, as we process them.
         $path = $this->getRelativeTemplatePath($this->root);
         $compiler->raw('$extension->storyCollector->setWrapperData(')
+            ->string($stories_id)
+            ->raw(', ')
             ->string($path)
             ->raw(', ')
             ->write('$_stories_meta')

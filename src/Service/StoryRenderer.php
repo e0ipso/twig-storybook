@@ -13,46 +13,43 @@ use TwigStorybook\Story;
 /**
  * Render a component with some context.
  */
-final class StoryRenderer
-{
+final class StoryRenderer {
 
-  /**
-   * The twig environment.
-   *
-   * @var \Twig\Environment|null
-   */
-    private ?Environment $environment = null;
+    /**
+     * The twig environment.
+     *
+     * @var \Twig\Environment|null
+     */
+    private ?Environment $environment = NULL;
 
-  /**
-   * Creates a new ComponentRenderer.
-   */
+    /**
+     * Creates a new ComponentRenderer.
+     */
     public function __construct(
         private readonly StoryCollector $storyCollector,
         private readonly LoggerInterface $logger,
         private readonly string $root,
-    ) {
-    }
+    ) {}
 
-  /**
-   * Renders the Twig markup of a component.
-   *
-   * @param string $story_id
-   * @param array $story_meta
-   * @param string $story_template
-   * @param array $context
-   *   The context of the component.
-   *
-   * @return string
-   *   The rendered markup.
-   * @throws \TwigStorybook\Exception\StoryRenderException
-   */
-    public function renderStory(string $story_id, array $story_meta, string $story_template, array $context): string
-    {
-        if (!is_string($context['_story'] ?? null)) {
+    /**
+     * Renders the Twig markup of a component.
+     *
+     * @param string $story_id
+     * @param array $story_meta
+     * @param string $story_template
+     * @param array $context
+     *   The context of the component.
+     *
+     * @return string
+     *   The rendered markup.
+     * @throws \TwigStorybook\Exception\StoryRenderException
+     */
+    public function renderStory(string $story_id, array $story_meta, string $story_template, array $context): string {
+        if (!is_string($context['_story'] ?? NULL)) {
             $message = 'Impossible to render the story, the `_story` variable is not set in the render context.';
             throw new StoryRenderException($message);
         }
-      // Only render the story if it matches the $context['story'] requested.
+        // Only render the story if it matches the $context['story'] requested.
         if ($story_id !== $context['_story']) {
             return '';
         }
@@ -63,18 +60,18 @@ final class StoryRenderer
             return $this->environment->createTemplate($story_template)->render(
                 array_merge($context, $story_meta)
             );
-        } catch (LoaderError|SyntaxError $exception) {
+        }
+        catch (LoaderError|SyntaxError $exception) {
             $this->logger->error($exception->getMessage());
             return '';
         }
     }
 
-    public function generateStoriesJsonFile(string $stories_path, string $url)
-    {
-      // Trigger the compilation of the template to collect the stories.
+    public function generateStoriesJsonFile(string $stories_path, string $url) {
+        // Trigger the compilation of the template to collect the stories.
         $wrapper = $this->environment->load($stories_path);
-      // This will execute the `compile` method without rendering anything.
-        $wrapper->render(['_story' => false]);
+        // This will execute the `compile` method without rendering anything.
+        $wrapper->render(['_story' => FALSE]);
         $path = ltrim(
             str_replace(
                 $this->root,
@@ -91,49 +88,48 @@ final class StoryRenderer
         );
 
         return [
-        ...$wrapper_data,
-        'stories' => $stories,
+            ...$wrapper_data,
+            'stories' => $stories,
         ];
     }
 
-  /**
-   * @throws \TwigStorybook\Exception\StorySyntaxException
-   * @throws \JsonException
-   */
-    private function massageStory(Story $story, string $stories_path, string $url): array
-    {
+    /**
+     * @throws \TwigStorybook\Exception\StorySyntaxException
+     * @throws \JsonException
+     */
+    private function massageStory(Story $story, string $stories_path, string $url): array {
         $meta = $story->meta;
-        if ($meta['parameters']['server']['id'] ?? null) {
+        if ($meta['parameters']['server']['id'] ?? NULL) {
             $message = 'The parameters.server.id property for a story will be ';
             $message .= 'generated automatically. Do not provide it.';
             throw new StorySyntaxException($message);
         }
-      // This ID will be used by Storybook to call the server. Something like:
-      // "https://example.com/$id"
+        // This ID will be used by Storybook to call the server. Something like:
+        // "https://example.com/$id"
         $meta['parameters']['server']['id'] = base64_encode(
             json_encode(
                 [
-                'path' => $stories_path,
-                'name' => $story->id,
+                    'path' => $stories_path,
+                    'id' => $story->id,
                 ],
                 JSON_THROW_ON_ERROR
             )
         );
-        return ['id' => $story->id, 'path' => $story->path, ...$meta];
+        $name = $meta['name'] ?? $story->id;
+        $meta['name'] = $name;
+        return $meta;
     }
 
-    private function validateStory(array $story)
-    {
-    }
+    private function validateStory(array $story) {}
 
-  /**
-   * Sets the Twig environment.
-   *
-   * @param \Twig\Environment $environment
-   *   The environment.
-   */
-    public function setTwigEnvironment(Environment $environment): void
-    {
+    /**
+     * Sets the Twig environment.
+     *
+     * @param \Twig\Environment $environment
+     *   The environment.
+     */
+    public function setTwigEnvironment(Environment $environment): void {
         $this->environment = $environment;
     }
+
 }

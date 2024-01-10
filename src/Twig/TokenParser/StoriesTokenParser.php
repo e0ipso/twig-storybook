@@ -23,8 +23,7 @@ final class StoriesTokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
 
-        $parent = $this->parser->getExpressionParser()->parseExpression();
-
+        $stories_id = $stream->expect(Token::NAME_TYPE)->getValue();
         [$variables] = $this->parseArguments();
 
         $child_template = $this->parser->subparse([$this, 'decideBlockEnd'], true);
@@ -32,7 +31,7 @@ final class StoriesTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return new StoriesNode(
-            $parent instanceof ConstantExpression ? $parent->getAttribute('value') : '',
+            $stories_id,
             $child_template,
             $variables,
             $token->getLine(),
