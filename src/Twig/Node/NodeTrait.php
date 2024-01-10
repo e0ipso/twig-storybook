@@ -27,20 +27,20 @@ trait NodeTrait
     {
         $compiler
         // Merge parameters.
-        ->raw('$context = twig_array_merge($context, ');
+        ->raw('$context = twig_array_merge(');
         $this->hasNode('variables')
         ? $compiler->subcompile($this->getNode('variables'))
         : $compiler->raw('[]');
         $compiler
-        ->write('[\'parameters\'][\'server\'][\'params\'] ?? []);')
+        ->write('[\'parameters\'][\'server\'][\'params\'] ?? [], $context);')
         ->write(PHP_EOL)
         // Merge args.
-        ->raw('$context = twig_array_merge($context, ');
+        ->raw('$context = twig_array_merge(');
         $this->hasNode('variables')
         ? $compiler->subcompile($this->getNode('variables'))
         : $compiler->raw('[]');
         $compiler
-        ->write('[\'args\'] ?? []);')
+        ->write('[\'args\'] ?? [], $context);')
         ->write(PHP_EOL);
         return $compiler;
     }
