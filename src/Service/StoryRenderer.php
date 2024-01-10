@@ -110,7 +110,7 @@ final class StoryRenderer
         }
         // This ID will be used by Storybook to call the server. Something like:
         // "https://example.com/$id"
-        $meta['parameters']['server']['id'] = base64_encode(
+        $meta['parameters']['server']['id'] = urlencode(base64_encode(
             json_encode(
                 [
                     'path' => $stories_path,
@@ -118,7 +118,7 @@ final class StoryRenderer
                 ],
                 JSON_THROW_ON_ERROR
             )
-        );
+        ));
         $name = $meta['name'] ?? $story->id;
         $meta['name'] = $name;
         return $meta;
