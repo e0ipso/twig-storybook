@@ -80,9 +80,43 @@ Here's an example:
 {% endstories %}
 ```
 
+This will render as:
+
+![Storybook Screenshot](./docs/sb-screenshot.png)
+
+### Storybook setup
+
+Install Storybook as usual:
+
+```
+yarn dlx sb init --builder webpack5 --type server
+```
+
+Then update `.storybook/main.js` to scan for stories where your application stores them.
+
+### Compiling Twig stories into JSON
+
+The Storybook application will does not understand stories in Twig format. It will fail to render them. You need to
+compile them into a `*.stories.json`. To do so, you can leverage the
+`StoryRenderer::generateStoriesJsonFile($template_path, $url)` method. Where the `$template_path` is the location of the
+`*.stories.twig` template, and the `$url` is the base URL in your application that will render the story.
+Storybook will make a request to `"$url . '/' . $hash"`, so make sure your application handles that route (see below).
+
+The [Drupal module implementation](https://www.drupal.org/project/storybook) includes a console command to find all
+`*.stories.twig` and compile them into `*.stories.json`.
+[See the implementation](https://git.drupalcode.org/project/storybook/-/blob/1.x/src/Drush/Commands/StorybookCommands.php).
+
 ### Rendering Stories
 
-To render the Storybook stories, you can use the `StoryRenderer` service.
+To render the Storybook stories, you can use the `StoryRenderer` service. Every framework handles routes differently,
+but we recommend using the story renderer inside your controller.
+
+```php
+  public function renderStoryControllerHandler(string $hash, Request $request): array {
+    $data = $this->storyRenderer->renderStory($hash, $request);
+    return new Response($data);
+  }
+```
 
 To use this service, wire the services to the container. The Twig Storybook Drupal module does it like this:
 
@@ -109,9 +143,6 @@ services:
     tags:
       - { name: twig.extension }
 ```
-
-Then you can use the `$storyRenderer` to generate the Storybook stories in JSON format. Or to render a story in a
-`*.stories.twig` template.
 
 ## Contributing
 

@@ -3,8 +3,11 @@
 namespace TwigStorybook\Service;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Twig\Environment;
 use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use TwigStorybook\Exception\StoryRenderException;
 use TwigStorybook\Exception\StorySyntaxException;
@@ -46,27 +49,73 @@ final class StoryRenderer
      *   The rendered markup.
      * @throws \TwigStorybook\Exception\StoryRenderException
      */
-    public function renderStory(string $story_id, array $story_meta, string $story_template, array $context): string
+    public function renderStory(string $hash, Request $request): string
     {
-        if (!is_string($context['_story'] ?? null)) {
-            $message = 'Impossible to render the story, the `_story` variable is not set in the render context.';
-            throw new StoryRenderException($message);
+        try {
+            $decoded = json_decode(
+                base64_decode(urldecode($hash)),
+                true,
+                512,
+                JSON_THROW_ON_ERROR,
+            );
+        } catch (\JsonException $e) {
+            throw new StoryRenderException(
+                'Unable to decode the story ID. Avoid tampering with the generated URL.',
+                previous: $e
+            );
         }
-        // Only render the story if it matches the $context['story'] requested.
-        if ($story_id !== $context['_story']) {
-            return '';
+        $template_path = $decoded['path'] ?? '';
+        $story_id = $decoded['id'] ?? '';
+        if (empty($template_path) || empty($story_id)) {
+            throw new StoryRenderException(
+                'Impossible to locate a story to render without the template path or the story name.'
+            );
         }
         if (!$this->environment instanceof Environment) {
             return '';
         }
+        // Merge into the $context, the values for the args from the HTTP request originated in Storybook.
+        $context = [
+            ...$this->getArguments($request, $template_path, $story_id),
+            '_story' => $story_id,
+        ];
         try {
-            return $this->environment->createTemplate($story_template)->render(
-                array_merge($context, $story_meta)
-            );
-        } catch (LoaderError|SyntaxError $exception) {
+            return $this->environment->load($template_path)->render($context);
+        } catch (LoaderError|SyntaxError|RuntimeError $exception) {
             $this->logger->error($exception->getMessage());
             return '';
         }
+    }
+
+    /**
+     * Gets the arguments.
+     *
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The inbound request.
+     *
+     * @return array
+     *   The array of arguments.
+     */
+    private function getArguments(Request $request, string $template_path, string $story_id): array
+    {
+        $wrapper = $this->environment->load($template_path);
+        $wrapper->render(['_story' => false]);
+        $stories = $this->storyCollector->getAllStories($template_path);
+        // Generate the story based on the path and ID. We need to inspect the args.
+        $filtered = array_filter(
+            $stories,
+            static fn(Story $st) => $st->id === $story_id,
+        );
+        $story = reset($filtered);
+        if (empty($story)) {
+            $message = sprintf('Impossible to find the story with hash "%s" in "%s".', $hash, $template_path);
+            throw new NotFoundHttpException($message);
+        }
+        $arg_names = array_keys($story->meta['args'] ?? []);
+        return array_intersect_key(
+            $request->query->getIterator()->getArrayCopy(),
+            array_flip($arg_names),
+        );
     }
 
     public function generateStoriesJsonFile(string $stories_path, string $url)
