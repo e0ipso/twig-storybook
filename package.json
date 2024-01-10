@@ -13,6 +13,7 @@
   "homepage": "https://github.com/e0ipso/twig-storybook#readme",
   "version": "1.0.0",
   "directories": {
+    "doc": "docs",
     "test": "tests"
   },
   "scripts": {
