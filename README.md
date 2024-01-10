@@ -24,7 +24,7 @@ composer require e0ipso/twig-storybook
 ## Usage
 
 ### With Drupal
-You don't need to use this package directly, use the [Twig Storybook](https://www.drupal.org/project/twig_storybook)
+You don't need to use this package directly, use the [Storybook](https://www.drupal.org/project/storybook)
 drupal module instead.
 
 ### Adding Twig Tags
@@ -55,24 +55,28 @@ writing the stories in a file with name `<file-name>.stories.twig`.
 Here's an example:
 
 ```twig
-{% set lorem = 'Hey!' %}
-{% stories 'Button' %}
-    {% story 'Primary' with {
-      parameters: { server: { params: { foo: 'Yay!' } } },
-      args: { bar: 'Yes' }
-    } %}
-      <div class="decorator">
-        <button class="btn-primary">{{ foo }} / {{ bar }}</button>
-        <p>{{ lorem }}</p>
-      </div>
-    {% endstory %}
+{% stories my_card with {
+  title: 'Components/Examples/Card',
+  argTypes: {
+    iconType: {
+      options: { Power: 'power', Like: 'like', External: 'external' },
+      control: 'radio'
+    }
+  }
+} %}
 
-    {% story 'Secondary' with {
-      parameters: { server: { params: { foo: 'Nay!' } } },
-      args: { bar: 'No' }
-    } %}
-        <button class="btn-secondary">{{ foo }} / {{ bar }}</button>
-    {% endstory %}
+  {% story default with {
+    name: '1. Default',
+    args: { header: 'I am a header!', text: 'Learn more', iconType: 'power' }
+  } %}
+    {% embed '@examples/my-card' with { header } %}
+      {% block card_body %}
+        <p>I am the <em>card</em> contents.</p>
+        {% include '@examples/my-button' with { text, iconType } %}
+      {% endblock %}
+    {% endembed %}
+  {% endstory %}
+
 {% endstories %}
 ```
 
