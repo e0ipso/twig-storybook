@@ -26,7 +26,7 @@ final class StoryCollector
      * @param array $story_meta
      *   The metadata to collect.
      */
-    public function collect(string $path, string $story_id, array $story_meta = []): void
+    public function collect(string $story_id, string $path, array $story_meta = []): void
     {
         $story = new Story($path, $story_id, $story_meta);
         $this->storage[$path]['stories'][spl_object_id($story)] = $story;
