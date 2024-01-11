@@ -112,7 +112,7 @@ final class StoryRenderer
         );
         $story = reset($filtered);
         if (empty($story)) {
-            $message = sprintf('Impossible to find the story with hash "%s" in "%s".', $hash, $template_path);
+            $message = sprintf('Impossible to find the story with ID "%s" in "%s".', $story_id, $template_path);
             throw new NotFoundHttpException($message);
         }
         $arg_names = array_keys($story->meta['args'] ?? []);
