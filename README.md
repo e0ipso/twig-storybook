@@ -137,7 +137,6 @@ services:
 
   TwigStorybook\Twig\TwigExtension:
     arguments:
-      - '@TwigStorybook\Service\StoryRenderer'
       - '@TwigStorybook\Service\StoryCollector'
       - '%app.root%'
     tags:

@@ -3,7 +3,7 @@
 namespace TwigStorybook\Exception;
 
 /**
- * Component syntax exception.
+ * Component rendering exception.
  */
 class StoryRenderException extends \Exception
 {

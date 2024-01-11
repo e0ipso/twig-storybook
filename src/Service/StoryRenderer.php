@@ -18,7 +18,6 @@ use TwigStorybook\Story;
  */
 final class StoryRenderer
 {
-
     /**
      * The twig environment.
      *
@@ -81,7 +80,7 @@ final class StoryRenderer
         ];
         try {
             return $this->environment->load($template_path)->render($context);
-        } catch (LoaderError|SyntaxError|RuntimeError $exception) {
+        } catch (LoaderError | SyntaxError | RuntimeError $exception) {
             $this->logger->error($exception->getMessage());
             return '';
         }
@@ -92,9 +91,14 @@ final class StoryRenderer
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *   The inbound request.
+     * @param string $template_path
+     * @param string $story_id
      *
      * @return array
      *   The array of arguments.
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     private function getArguments(Request $request, string $template_path, string $story_id): array
     {

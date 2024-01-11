@@ -4,14 +4,19 @@ namespace TwigStorybook\Twig\TokenParser;
 
 use TwigStorybook\Exception\StorySyntaxException;
 use TwigStorybook\Twig\Node\StoriesNode;
-use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
+/**
+ * Class StoriesTokenParser
+ *
+ * This class is responsible for parsing the "stories" tag in a template and generating a StoriesNode.
+ *
+ * @package YourPackageName
+ */
 final class StoriesTokenParser extends AbstractTokenParser
 {
-
     public function __construct(private readonly string $root)
     {
     }
@@ -48,6 +53,24 @@ final class StoriesTokenParser extends AbstractTokenParser
         return 'stories';
     }
 
+    /**
+     * Checks whether the given token marks the end of a block.
+     *
+     * This method retrieves the stream from the parser and checks if the given
+     * token matches the string "endstories".
+     * If it does, the method returns true.
+     * Otherwise, the method checks if the next token in the stream is of type
+     * "NAME_TYPE" and its value is "story".
+     * If it is not, a StorySyntaxException is thrown, indicating that only
+     * {% story %} tokens are allowed inside {% stories %} blocks.
+     * Finally, if none of the above conditions are met, the method returns
+     * false.
+     *
+     * @param Token $token The token to check.
+     *
+     * @return bool Returns true if the token marks the end of a block, or false otherwise.
+     * @throws StorySyntaxException When the token does not match the expected conditions.
+     */
     public function decideBlockEnd(Token $token): bool
     {
         $stream = $this->parser->getStream();
@@ -68,6 +91,21 @@ final class StoriesTokenParser extends AbstractTokenParser
         return false;
     }
 
+    /**
+     * Parses the arguments for the method.
+     *
+     * This method retrieves the stream from the parser and checks if it has
+     * the
+     * keyword "with".
+     * If "with" is found, it then uses the expression parser to parse the
+     * expression and assigns it to the $variables variable.
+     * After that, it expects the token of the end of the block.
+     *
+     * @return array Returns an array containing the parsed variables, or null
+     *     if "with" was not found.
+     *
+     * @throws \Twig\Error\SyntaxError
+     */
     protected function parseArguments(): array
     {
         $stream = $this->parser->getStream();

@@ -13,39 +13,32 @@ use Twig\Extension\AbstractExtension;
  */
 final class TwigExtension extends AbstractExtension
 {
-
     /**
-     * TwigComponentExtension constructor.
+     * Class constructor.
      *
-     * @param \TwigStorybook\Service\StoryRenderer  $storyRenderer
-     *   Renderer.
-     * @param \TwigStorybook\Service\StoryCollector $storyCollector
-     *   Collector.
+     * @param StoryCollector $storyCollector The story collector instance.
+     * @param string $root The root directory path.
+     *
+     * @return void
      */
     public function __construct(
-        public readonly StoryRenderer $storyRenderer,
         public readonly StoryCollector $storyCollector,
         private readonly string $root,
     ) {
     }
 
     /**
-     * {@inheritdoc}
+     * Retrieve an array of token parsers.
      *
-     * @return array
+     * This method returns an array of token parsers, used for parsing tokens in a specific format.
+     *
+     * @return array An array of token parsers.
      */
     public function getTokenParsers(): array
     {
-        return [new StoriesTokenParser($this->root), new StoryTokenParser($this->root)];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public function getNodeVisitors(): array
-    {
-        return [new StoryNodeVisitor()];
+        return [
+            new StoriesTokenParser($this->root),
+            new StoryTokenParser($this->root)
+        ];
     }
 }
