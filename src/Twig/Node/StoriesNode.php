@@ -48,13 +48,14 @@ final class StoriesNode extends Node
      */
     public function compile(Compiler $compiler): void
     {
+        // Compile the context merging and the body of the node.
+        $this->compileMergeContext($compiler, '_stories_meta');
+
         // Collect story metadata for inclusion in the compiled template.
         $this->collectStoryMetadata($compiler);
         // Add debugging information to the compiler.
-        $compiler->addDebugInfo($this);
-
-        // Compile the context merging and the body of the node.
-        $this->compileMergeContext($compiler)
+        $compiler
+            ->addDebugInfo($this)
             ->subcompile($this->getNode('body'));
     }
 
@@ -74,14 +75,6 @@ final class StoriesNode extends Node
 
         // Retrieve the story ID attribute.
         $stories_id = $this->getAttribute('id');
-
-        // Write the story metadata to the compiled template.
-        $compiler->write('$_stories_meta = ');
-        // Check if 'variables' attribute is set and compile accordingly.
-        $this->hasAttribute('variables')
-            ? $compiler->subcompile($this->getAttribute('variables'))
-            : $compiler->raw('[]');
-        $compiler->write(';')->raw(PHP_EOL);
 
         // Retrieve the TwigExtension and prepare to set wrapper data.
         $compiler->raw('$extension = $this->extensions[')

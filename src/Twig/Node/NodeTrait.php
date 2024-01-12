@@ -45,25 +45,23 @@ trait NodeTrait
      *
      * @return Compiler The modified compiler instance with the added context.
      */
-    private function compileMergeContext(Compiler $compiler): Compiler
+    private function compileMergeContext(Compiler $compiler, string $var_name): Compiler
     {
-        $compiler
+        // Write the story metadata to the compiled template.
+        $compiler->write(sprintf('$%s = ', $var_name));
+        // Check if 'variables' attribute is set and compile accordingly.
+        $this->hasAttribute('variables')
+            ? $compiler->subcompile($this->getAttribute('variables'))->write(";\n")
+            : $compiler->raw("[];\n");
+        return $compiler
             // Merge parameters.
-            ->raw('$context = twig_array_merge(');
-        $this->hasNode('variables')
-            ? $compiler->subcompile($this->getNode('variables'))
-            : $compiler->raw('[]');
-        $compiler
-            ->write('[\'parameters\'][\'server\'][\'params\'] ?? [], $context);')
-            ->write(PHP_EOL)
-            // Merge args.
-            ->raw('$context = twig_array_merge(');
-        $this->hasNode('variables')
-            ? $compiler->subcompile($this->getNode('variables'))
-            : $compiler->raw('[]');
-        $compiler
-            ->write('[\'args\'] ?? [], $context);')
+            ->raw(sprintf(
+                '$context = twig_array_merge($%s%s ?? [], $%s%s ?? [], $context);',
+                $var_name,
+                "['parameters']['server']['params']",
+                $var_name,
+                "['args']",
+            ))
             ->write(PHP_EOL);
-        return $compiler;
     }
 }

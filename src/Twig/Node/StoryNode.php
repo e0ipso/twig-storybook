@@ -36,7 +36,7 @@ final class StoryNode extends Node implements NodeOutputInterface
         string $tag,
         private readonly string $root
     ) {
-        parent::__construct(['variables' => $variables], ['name' => $name, 'body' => $body], $lineno, $tag);
+        parent::__construct(['body' => $body], ['name' => $name, 'variables' => $variables], $lineno, $tag);
     }
 
     /**
@@ -47,6 +47,8 @@ final class StoryNode extends Node implements NodeOutputInterface
      */
     public function compile(Compiler $compiler): void
     {
+        $this->compileMergeContext($compiler, '_story_meta');
+
         // Collect the metadata related to the story
         $this->collectStoryMetadata($compiler);
 
@@ -60,8 +62,8 @@ final class StoryNode extends Node implements NodeOutputInterface
             ->indent();
 
         // Compile the story context and compile the story body
-        $this->compileMergeContext($compiler)
-            ->subcompile($this->getAttribute('body'))
+        $compiler
+            ->subcompile($this->getNode('body'))
             ->write(';')
             ->write(PHP_EOL)
             ->outdent()
@@ -83,17 +85,8 @@ final class StoryNode extends Node implements NodeOutputInterface
         $compiler
             ->addDebugInfo($this)
             ->write('if (($context[\'_story\'] ?? NULL) === FALSE) {')
-            ->indent()
-            // $_story_meta = ['foo' => 'bar'];
-            ->write('$_story_meta = ');
-        // Determine if the node has variables and compile them
-        $this->hasNode('variables')
-            ? $compiler->subcompile($this->getNode('variables'))
-            : $compiler->raw('[]');
-
+            ->indent();
         $compiler
-            ->write(';')
-            ->write(PHP_EOL)
             // Get the extension.
             ->raw('$extension = $this->extensions[')
             ->string(TwigExtension::class)

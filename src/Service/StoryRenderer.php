@@ -116,9 +116,18 @@ final class StoryRenderer
             throw new NotFoundHttpException($message);
         }
         $arg_names = array_keys($story->meta['args'] ?? []);
-        return array_intersect_key(
-            $request->query->getIterator()->getArrayCopy(),
-            array_flip($arg_names),
+        return array_map(
+            static function (string $value) {
+                try {
+                    return json_decode($value, false, 512, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    return $value;
+                }
+            },
+            array_intersect_key(
+                $request->query->getIterator()->getArrayCopy(),
+                array_flip($arg_names),
+            )
         );
     }
 
