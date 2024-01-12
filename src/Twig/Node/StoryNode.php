@@ -89,8 +89,8 @@ final class StoryNode extends Node implements NodeOutputInterface
             ->addDebugInfo($this)
             ->write('if ($_selected_story === FALSE) {')
             ->indent();
-        $this->putMetadataIntoVariable($compiler, '_story_meta');
-        $compiler
+
+        $this->putMetadataIntoVariable($compiler, '_story_meta')
             // Get the extension.
             ->raw('$extension = $this->extensions[')
             ->string(TwigExtension::class)

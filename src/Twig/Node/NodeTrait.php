@@ -47,8 +47,7 @@ trait NodeTrait
      */
     private function compileMergeContext(Compiler $compiler, string $var_name): Compiler
     {
-        $this->putMetadataIntoVariable($compiler, $var_name);
-        return $compiler
+        return $this->putMetadataIntoVariable($compiler, $var_name)
             // Merge parameters.
             ->raw(sprintf(
                 '$context = twig_array_merge($%s%s ?? [], $%s%s ?? [], $context);',
@@ -76,5 +75,6 @@ trait NodeTrait
         $this->hasAttribute('variables')
             ? $compiler->subcompile($this->getAttribute('variables'))->write(";\n")
             : $compiler->raw("[];\n");
+        return $compiler;
     }
 }
