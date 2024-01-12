@@ -48,6 +48,10 @@ final class StoriesNode extends Node
      */
     public function compile(Compiler $compiler): void
     {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('$_selected_story = $context[\'_story\'] ?? NULL;')
+            ->write(";\n");
         // Compile the context merging and the body of the node.
         $this->compileMergeContext($compiler, '_stories_meta');
 
@@ -70,7 +74,7 @@ final class StoriesNode extends Node
         $compiler
             ->addDebugInfo($this)
             // Write a conditional to check the story context.
-            ->write('if ($context[\'_story\'] === FALSE) {')
+            ->write('if ($_selected_story === FALSE) {')
             ->indent(); // Increase indentation for better readability.
 
         // Retrieve the story ID attribute.

@@ -41,18 +41,13 @@ trait NodeTrait
      * 'parameters' and 'args' into the context, ensuring that any variables
      * and arguments are appropriately incorporated.
      *
-     * @param Compiler $compiler The Twig compiler instance.
+     * @param \Twig\Compiler $compiler The Twig compiler instance.
      *
-     * @return Compiler The modified compiler instance with the added context.
+     * @return \Twig\Compiler          The modified compiler instance with the added context.
      */
     private function compileMergeContext(Compiler $compiler, string $var_name): Compiler
     {
-        // Write the story metadata to the compiled template.
-        $compiler->write(sprintf('$%s = ', $var_name));
-        // Check if 'variables' attribute is set and compile accordingly.
-        $this->hasAttribute('variables')
-            ? $compiler->subcompile($this->getAttribute('variables'))->write(";\n")
-            : $compiler->raw("[];\n");
+        $this->putMetadataIntoVariable($compiler, $var_name);
         return $compiler
             // Merge parameters.
             ->raw(sprintf(
@@ -63,5 +58,23 @@ trait NodeTrait
                 "['args']",
             ))
             ->write(PHP_EOL);
+    }
+
+    /**
+     * Puts the metadata into a variable.
+     *
+     * @param \Twig\Compiler $compiler The compiler object to write the metadata to.
+     * @param string $var_name         The name of the variable to store the metadata.
+     *
+     * @return \Twig\Compiler          The modified compiler instance with the added context.
+     */
+    private function putMetadataIntoVariable(Compiler $compiler, string $var_name): Compiler
+    {
+        // Write the story metadata to the compiled template.
+        $compiler->write(sprintf('$%s = ', $var_name));
+        // Check if 'variables' attribute is set and compile accordingly.
+        $this->hasAttribute('variables')
+            ? $compiler->subcompile($this->getAttribute('variables'))->write(";\n")
+            : $compiler->raw("[];\n");
     }
 }

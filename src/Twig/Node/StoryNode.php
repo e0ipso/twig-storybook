@@ -47,19 +47,19 @@ final class StoryNode extends Node implements NodeOutputInterface
      */
     public function compile(Compiler $compiler): void
     {
-        $this->compileMergeContext($compiler, '_story_meta');
-
-        // Collect the metadata related to the story
-        $this->collectStoryMetadata($compiler);
-
         // Story nodes should only print their interior if the $context['_story']
         // variable is set to $this->getAttribute('name') at the time of rendering.
         $compiler
             ->addDebugInfo($this)
-            ->write('if (($context[\'_story\'] ?? NULL) === ')
+            ->write('$_selected_story = $context[\'_story\'] ?? NULL;')
+            ->write(";\n");
+        $compiler
+            ->write('if ($_selected_story === ')
             ->string($this->getAttribute('name'))
             ->write(') {')
             ->indent();
+
+        $this->compileMergeContext($compiler, '_story_meta');
 
         // Compile the story context and compile the story body
         $compiler
@@ -68,6 +68,9 @@ final class StoryNode extends Node implements NodeOutputInterface
             ->write(PHP_EOL)
             ->outdent()
             ->write('}');
+
+        // Collect the metadata related to the story
+        $this->collectStoryMetadata($compiler);
     }
 
     /**
@@ -84,8 +87,9 @@ final class StoryNode extends Node implements NodeOutputInterface
 
         $compiler
             ->addDebugInfo($this)
-            ->write('if (($context[\'_story\'] ?? NULL) === FALSE) {')
+            ->write('if ($_selected_story === FALSE) {')
             ->indent();
+        $this->putMetadataIntoVariable($compiler, '_story_meta');
         $compiler
             // Get the extension.
             ->raw('$extension = $this->extensions[')
