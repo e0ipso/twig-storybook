@@ -115,7 +115,11 @@ final class StoryRenderer
             $message = sprintf('Impossible to find the story with ID "%s" in "%s".', $story_id, $template_path);
             throw new NotFoundHttpException($message);
         }
-        $arg_names = array_keys($story->meta['args'] ?? []);
+        $args = $story->meta['args'] ?? [];
+        if ($story->meta['argTypes']) {
+            $args = array_merge($story->meta['argTypes'], $args);
+        }
+        $arg_names = array_keys($args);
         return array_map(
             static function (string $value) {
                 try {
