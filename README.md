@@ -88,7 +88,12 @@ This will render as:
 
 Install Storybook as usual:
 
-```
+```console
+# Make use of modern versions of yarn.
+yarn set version berry
+# Avoid pnp.
+echo 'nodeLinker: node-modules' >> .yarnrc.yml
+# Install and configure stock Storybook.
 yarn dlx sb init --builder webpack5 --type server
 ```
 
