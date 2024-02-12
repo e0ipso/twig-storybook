@@ -87,7 +87,7 @@ final class StoryNode extends Node implements NodeOutputInterface
 
         $compiler
             ->addDebugInfo($this)
-            ->write('if ($_selected_story === FALSE) {')
+            ->write('if ($_selected_story === FALSE || $_selected_story === NULL) {')
             ->indent();
 
         $this->putMetadataIntoVariable($compiler, '_story_meta')
