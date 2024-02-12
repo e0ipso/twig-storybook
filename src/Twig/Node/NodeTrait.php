@@ -50,7 +50,7 @@ trait NodeTrait
         return $this->putMetadataIntoVariable($compiler, $var_name)
             // Merge parameters.
             ->raw(sprintf(
-                '$context = twig_array_merge($%s%s ?? [], $%s%s ?? [], $context);',
+                '$context = twig_array_merge($%s%s ?? [], twig_array_merge($%s%s ?? [], $context));',
                 $var_name,
                 "['parameters']['server']['params']",
                 $var_name,
