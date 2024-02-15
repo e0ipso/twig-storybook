@@ -119,7 +119,7 @@ final class StoryRenderer
         return array_map(
             static function (string $value) {
                 try {
-                    return json_decode($value, false, 512, JSON_THROW_ON_ERROR);
+                    return json_decode($value, true, 512, JSON_THROW_ON_ERROR);
                 } catch (\JsonException $e) {
                     return $value;
                 }
