@@ -146,7 +146,9 @@ final class StoryRenderer
             '/'
         );
         $wrapper_data = $this->storyCollector->getWrapperData($path);
-        $wrapper_data['parameters']['server']['url'] = $url;
+        if (isset($url)) {
+            $wrapper_data['parameters']['server']['url'] = $url;
+        }
         $stories = array_map(
             fn(Story $story) => $this->massageStory($story, $path, $url),
             $this->storyCollector->getAllStories($path),
