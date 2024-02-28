@@ -131,7 +131,7 @@ final class StoryRenderer
         );
     }
 
-    public function generateStoriesJsonFile(string $stories_path, string $url)
+    public function generateStoriesJsonFile(string $stories_path, string $url = '')
     {
         // Trigger the compilation of the template to collect the stories.
         $wrapper = $this->environment->load($stories_path);
@@ -146,7 +146,9 @@ final class StoryRenderer
             '/'
         );
         $wrapper_data = $this->storyCollector->getWrapperData($path);
-        $wrapper_data['parameters']['server']['url'] = $url;
+        if (!empty($url)) {
+            $wrapper_data['parameters']['server']['url'] = $url;
+        }
         $stories = array_map(
             fn(Story $story) => $this->massageStory($story, $path, $url),
             $this->storyCollector->getAllStories($path),
