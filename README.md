@@ -25,7 +25,7 @@ composer require e0ipso/twig-storybook
 
 ### With Drupal
 You don't need to use this package directly, use the [Storybook](https://www.drupal.org/project/storybook)
-drupal module instead.
+drupal module instead. This library is compatible with Drupal 10, and later.
 
 ### Adding Twig Tags
 
