@@ -116,6 +116,11 @@ final class StoryRenderer
             throw new NotFoundHttpException($message);
         }
         $arg_names = array_keys($story->meta['args'] ?? []);
+        $wrapper_data = $this->storyCollector->getWrapperData($template_path);
+        if (!empty($wrapper_data['argTypes'])) {
+            $arg_types = array_keys($wrapper_data['argTypes']);
+            $arg_names = array_unique(array_merge($arg_names, $arg_types), SORT_REGULAR);
+        }
         return array_map(
             static function (string $value) {
                 try {
