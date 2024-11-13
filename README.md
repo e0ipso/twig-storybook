@@ -34,7 +34,7 @@ After installing the package, you need to register the Twig tags in your Twig en
 ```php
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
-use E0ipso\TwigStorybook\Twig\StorybookExtension;
+use TwigStorybook\Twig\StorybookExtension;
 
 // Initialize the Twig environment
 $loader = new FilesystemLoader('path/to/your/templates');
