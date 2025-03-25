@@ -21,6 +21,7 @@ class StoryRendererTest extends TestCase {
   public function testConstructor(): void {
     // Since StoryCollector is final we need to use a real instance.
     $storyCollector = new StoryCollector();
+    /** @var \Psr\Log\LoggerInterface&\PHPUnit\Framework\MockObject\MockObject $logger */
     $logger = $this->createMock(LoggerInterface::class);
     $root = '/path/to/root';
 
