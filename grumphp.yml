@@ -39,6 +39,11 @@ grumphp:
     composer: ~
     composer_normalize: ~
     jsonlint: ~
+    phpstan:
+      configuration: phpstan.neon
+      level: ~
+      memory_limit: "-1"
+      triggered_by: ['php']
     phpparser:
       visitors:
         no_exit_statements: ~

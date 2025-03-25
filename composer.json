@@ -13,7 +13,10 @@
         "php": ">=8.1",
         "ext-dom": "*",
         "ext-mbstring": "*",
+        "psr/log": "^1.0 || ^2.0 || ^3.0",
         "symfony/dom-crawler": "^4.4.45 || ^6 || ^7",
+        "symfony/http-foundation": "^4.4.45 || ^6 || ^7",
+        "symfony/http-kernel": "^4.4.45 || ^6 || ^7",
         "twig/twig": "^2.15.4 || ^3"
     },
     "require-dev": {
@@ -22,6 +25,7 @@
         "nikic/php-parser": "^4",
         "php-parallel-lint/php-parallel-lint": "^1",
         "phpro/grumphp-shim": "^2",
+        "phpstan/phpstan": "^2.1",
         "phpunit/phpunit": "^9.5",
         "povils/phpmnd": "^3",
         "squizlabs/php_codesniffer": "^3"

@@ -38,11 +38,10 @@ final class StoryRenderer
     /**
      * Renders the Twig markup of a component.
      *
-     * @param string $story_id
-     * @param array $story_meta
-     * @param string $story_template
-     * @param array $context
-     *   The context of the component.
+     * @param string $hash
+     *   The encoded story hash.
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *   The inbound request.
      *
      * @return string
      *   The rendered markup.
@@ -166,10 +165,19 @@ final class StoryRenderer
     }
 
     /**
+     * @param \TwigStorybook\Story $story
+     *   The story object.
+     * @param string $stories_path
+     *   The path to the stories file.
+     * @param string $url
+     *   The URL to use.
+     *
+     * @return array
+     *   The massaged story data.
      * @throws \TwigStorybook\Exception\StorySyntaxException
      * @throws \JsonException
      */
-    private function massageStory(Story $story, string $stories_path): array
+    private function massageStory(Story $story, string $stories_path, string $url = ''): array
     {
         $meta = $story->meta;
         if ($meta['parameters']['server']['id'] ?? null) {
@@ -191,10 +199,6 @@ final class StoryRenderer
         $name = $meta['name'] ?? $story->id;
         $meta['name'] = $name;
         return $meta;
-    }
-
-    private function validateStory(array $story)
-    {
     }
 
     /**

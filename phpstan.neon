@@ -1,0 +1,10 @@
+parameters:
+  level: 5
+  paths:
+    - src
+    - tests
+  excludePaths:
+    - vendor/*
+    - node_modules/*
+  ignoreErrors:
+    # Add specific error patterns to ignore here if needed
