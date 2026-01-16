@@ -7,6 +7,7 @@ use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
+use Twig\Attribute\YieldReady;
 
 /**
  * StoryNode Class
@@ -14,6 +15,7 @@ use Twig\Node\NodeOutputInterface;
  * This class extends the `Node` class from the Twig library and implements the `NodeOutputInterface`.
  * It represents a single "story" node in the template tree.
  */
+#[YieldReady]
 final class StoryNode extends Node implements NodeOutputInterface
 {
     use NodeTrait;

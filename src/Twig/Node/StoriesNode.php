@@ -6,11 +6,13 @@ use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 use TwigStorybook\Twig\TwigExtension;
+use Twig\Attribute\YieldReady;
 
 /**
  * The StoriesNode class extends the Twig Node class, providing functionality
  * specific to story nodes in Twig templates.
  */
+#[YieldReady]
 final class StoriesNode extends Node
 {
     use NodeTrait; // Use the functionality defined in NodeTrait.
